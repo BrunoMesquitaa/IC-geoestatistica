@@ -1,0 +1,435 @@
+---
+title: "Geoestatística"
+author: "Bruno Mesquita dos Santos"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+# Geoestatística - Variável Dicotomica
+
+## Instalando Pacotes
+
+```{r}
+if (!require('readxl'))install.packages("readxl");library(readxl)
+if (!require('fBasics'))install.packages("fBasics");library(fBasics)
+if (!require('geoR'))install.packages("geoR");library(geoR)
+```
+
+## Função
+
+```{r}
+dicotomica <- function(df,col){
+  q1 = quantile(df[col][[1]],0.25)
+  q2 = quantile(df[col][[1]],0.5)
+  q3 = quantile(df[col][[1]],0.75)
+  md = mean(df[col][[1]])
+  
+  df[paste0(col,'_q1')] = ifelse(df[col]<=q1,1,0)
+  df[paste0(col,'_q2')] = ifelse(df[col]<=q2,1,0)
+  df[paste0(col,'_md')] = ifelse(df[col]<=md,1,0)
+  df[paste0(col,'_q3')] = ifelse(df[col]<=q3,1,0)
+  df
+}
+```
+
+## Lendo Arquivo
+
+```{r}
+dados <- read_excel("dados/dados1-pibic.xlsx")
+dados
+```
+
+## Transformar para Variáveis Dicotomica
+
+Criando uma variáveis dicotômicas para cada variável original, considerando como corte os valores de média, Q1, Q2 e Q3. A regra será se o valor original for menor ou igual ao valor de corte a dicotômica recebe 1, caso contrário recebe 0.
+
+```{r}
+for (i in names(dados)[3:length(names(dados))]) {
+  dados = dicotomica(dados,i)
+}
+```
+
+## Transformando os Dados em Geodados
+
+```{r}
+geo_altitude_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Altitude_q1")
+geo_altitude_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Altitude_q2")
+geo_altitude_md<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Altitude_md")
+geo_altitude_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Altitude_q3")
+
+geo_umidade_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                           data.col="Umidade_q1")
+geo_umidade_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                           data.col="Umidade_q2")
+geo_umidade_md<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                           data.col="Umidade_md")
+geo_umidade_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                           data.col="Umidade_q3")
+
+geo_argila_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                          data.col="Argila_q1")
+geo_argila_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                          data.col="Argila_q2")
+geo_argila_md<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                          data.col="Argila_md")
+geo_argila_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                          data.col="Argila_q3")
+
+geo_silte_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                         data.col="Silte_q1")
+geo_silte_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                         data.col="Silte_q2")
+geo_silte_md<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Silte_md")
+geo_silte_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Silte_q3")
+
+geo_areia_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Areia_q1")
+geo_areia_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Areia_q2")
+geo_areia_md<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Areia_md")
+geo_areia_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
+                         data.col="Areia_q3")
+```
+
+## Gráficos Espaciais
+
+```{r}
+points(geo_altitude_q1, main="Semivariograma altitude da dicotomica para Q1")
+```
+
+```{r}
+points(geo_altitude_q2, main="Semivariograma altitude da dicotomica para Q2")
+```
+
+```{r}
+points(geo_altitude_md, main="Semivariograma altitude da dicotomica para Médio")
+```
+
+```{r}
+points(geo_altitude_q3, main="Semivariograma altitude da dicotomica para Q3")
+```
+
+```{r}
+points(geo_umidade_q1, main="Semivariograma umidade da dicotomica para Q1")
+```
+
+```{r}
+points(geo_umidade_q2, main="Semivariograma umidade da dicotomica para Q2")
+```
+
+```{r}
+points(geo_umidade_md, main="Semivariograma umidade da dicotomica para Médio")
+```
+
+```{r}
+points(geo_umidade_q3, main="Semivariograma umidade da dicotomica para Q3")
+```
+
+```{r}
+points(geo_argila_q1, main="Semivariograma argila da dicotomica para Q1")
+```
+
+```{r}
+points(geo_argila_q2, main="Semivariograma argila da dicotomica para Q2")
+```
+
+```{r}
+points(geo_argila_md, main="Semivariograma argila da dicotomica para Médio")
+```
+
+```{r}
+points(geo_argila_q3, main="Semivariograma argila da dicotomica para Q3")
+```
+
+```{r}
+points(geo_silte_q1, main="Semivariograma silte da dicotomica para Q1")
+```
+
+```{r}
+points(geo_silte_q2, main="Semivariograma silte da dicotomica para Q2")
+```
+
+```{r}
+points(geo_silte_md, main="Semivariograma silte da dicotomica para Médio")
+```
+
+```{r}
+points(geo_silte_q3, main="Semivariograma silte da dicotomica para Q3")
+```
+
+```{r}
+points(geo_areia_q1, main="Semivariograma areia da dicotomica para Q1")
+```
+
+```{r}
+points(geo_areia_q2, main="Semivariograma areia da dicotomica para Q2")
+```
+
+```{r}
+points(geo_areia_md, main="Semivariograma areia da dicotomica para Médio")
+```
+
+```{r}
+points(geo_areia_q3, main="Semivariograma areia da dicotomica para Q3")
+```
+
+## Ajustando o Semivariograma
+
+```{r}
+semi_altitude_q1 <- variog(geo_altitude_q1, max.dist=50)
+plot(semi_altitude_q1, main="Semivariograma altitude da dicotomica para Q1")
+ajust_altitude_q1 <- variofit(semi_altitude_q1, max.dist=50,wei="equal")
+lines(ajust_altitude_q1, col="blue")
+```
+
+```{r}
+semi_altitude_q2 <- variog(geo_altitude_q2, max.dist=50)
+plot(semi_altitude_q2, main="Semivariograma altitude da dicotomica para Q2")
+ajust_altitude_q2 <- variofit(semi_altitude_q2, max.dist=50,wei="equal")
+lines(ajust_altitude_q2, col="blue")
+```
+
+```{r}
+semi_altitude_md <- variog(geo_altitude_md, max.dist=50)
+plot(semi_altitude_md, main="Semivariograma altitude da dicotomica para Médio")
+ajust_altitude_md <- variofit(semi_altitude_md, max.dist=50,wei="equal")
+lines(ajust_altitude_md, col="blue")
+```
+
+```{r}
+semi_altitude_q3 <- variog(geo_altitude_q3, max.dist=50)
+plot(semi_altitude_q3, main="Semivariograma altitude da dicotomica para Q3")
+ajust_altitude_q3 <- variofit(semi_altitude_q1, max.dist=50,wei="equal")
+lines(ajust_altitude_q3, col="blue")
+```
+
+```{r}
+semi_umidade_q1 <- variog(geo_umidade_q1, max.dist=50)
+plot(semi_umidade_q1, main="Semivariograma umidade da dicotomica para Q1")
+ajust_umidade_q1 <- variofit(semi_umidade_q1, max.dist=50,wei="equal")
+lines(ajust_umidade_q1, col="blue")
+```
+
+```{r}
+semi_umidade_q2 <- variog(geo_umidade_q2, max.dist=50)
+plot(semi_umidade_q2, main="Semivariograma umidade da dicotomica para Q2")
+ajust_umidade_q2 <- variofit(semi_umidade_q2, max.dist=50,wei="equal")
+lines(ajust_umidade_q2, col="blue")
+```
+
+```{r}
+semi_umidade_md <- variog(geo_umidade_md, max.dist=50)
+plot(semi_umidade_md, main="Semivariograma umidade da dicotomica para Médio")
+ajust_umidade_md <- variofit(semi_umidade_md, max.dist=50,wei="equal")
+lines(ajust_umidade_md, col="blue")
+```
+
+```{r}
+semi_umidade_q3 <- variog(geo_umidade_q3, max.dist=50)
+plot(semi_umidade_q3, main="Semivariograma umidade da dicotomica para Q3")
+ajust_umidade_q3 <- variofit(semi_umidade_q3, max.dist=50,wei="equal")
+lines(ajust_umidade_q3, col="blue")
+```
+
+```{r}
+semi_argila_q1 <- variog(geo_argila_q1, max.dist=50)
+plot(semi_argila_q1, main="Semivariograma argila da dicotomica para Q1")
+ajust_argila_q1 <- variofit(semi_argila_q1, max.dist=50,wei="equal")
+lines(ajust_argila_q1, col="blue")
+```
+
+```{r}
+semi_argila_q2 <- variog(geo_argila_q2, max.dist=50)
+plot(semi_argila_q2, main="Semivariograma argila da dicotomica para Q2")
+ajust_argila_q2 <- variofit(semi_argila_q2, max.dist=50,wei="equal")
+lines(ajust_argila_q2, col="blue")
+```
+
+```{r}
+semi_argila_md <- variog(geo_argila_q1, max.dist=50)
+plot(semi_argila_md, main="Semivariograma argila da dicotomica para Médio")
+ajust_argila_md <- variofit(semi_argila_md, max.dist=50,wei="equal")
+lines(ajust_argila_md, col="blue")
+```
+
+```{r}
+semi_argila_q3 <- variog(geo_argila_q3, max.dist=50)
+plot(semi_argila_q3, main="Semivariograma argila da dicotomica para Q3")
+ajust_argila_q3 <- variofit(semi_argila_q3, max.dist=50,wei="equal")
+lines(ajust_argila_q3, col="blue")
+```
+
+```{r}
+semi_silte_q1 <- variog(geo_silte_q1, max.dist=50)
+plot(semi_silte_q1, main="Semivariograma silte da dicotomica para Q1")
+ajust_silte_q1 <- variofit(semi_silte_q1, max.dist=50,wei="equal")
+lines(ajust_silte_q1, col="blue")
+```
+
+```{r}
+semi_silte_q2 <- variog(geo_silte_q2, max.dist=50)
+plot(semi_silte_q2, main="Semivariograma silte da dicotomica para Q2")
+ajust_silte_q2 <- variofit(semi_silte_q2, max.dist=50,wei="equal")
+lines(ajust_silte_q2, col="blue")
+```
+
+```{r}
+semi_silte_md <- variog(geo_silte_md, max.dist=50)
+plot(semi_silte_md, main="Semivariograma silte da dicotomica para Médio")
+ajust_silte_md <- variofit(semi_silte_md, max.dist=50,wei="equal")
+lines(ajust_silte_md, col="blue")
+```
+
+```{r}
+semi_silte_q3 <- variog(geo_silte_q3, max.dist=50)
+plot(semi_silte_q3, main="Semivariograma silte da dicotomica para Q3")
+ajust_silte_q3 <- variofit(semi_silte_q3, max.dist=50,wei="equal")
+lines(ajust_silte_q3, col="blue")
+```
+
+```{r}
+semi_areia_q1 <- variog(geo_areia_q1, max.dist=50)
+plot(semi_areia_q1, main="Semivariograma areia da dicotomica para Q1")
+ajust_areia_q1 <- variofit(semi_areia_q1, max.dist=50,wei="equal")
+lines(ajust_areia_q1, col="blue")
+```
+
+```{r}
+semi_areia_q2 <- variog(geo_areia_q2, max.dist=50)
+plot(semi_areia_q2, main="Semivariograma areia da dicotomica para Q2")
+ajust_areia_q2 <- variofit(semi_areia_q2, max.dist=50,wei="equal")
+lines(ajust_areia_q2, col="blue")
+```
+
+```{r}
+semi_areia_md <- variog(geo_areia_md, max.dist=50)
+plot(semi_areia_md, main="Semivariograma areia da dicotomica para Médio")
+ajust_areia_md <- variofit(semi_areia_md, max.dist=50,wei="equal")
+lines(ajust_areia_md, col="blue")
+```
+
+```{r}
+semi_areia_q3 <- variog(geo_areia_q3, max.dist=50)
+plot(semi_areia_q3, main="Semivariograma areia da dicotomica para Q3")
+ajust_areia_q3 <- variofit(semi_areia_q3, max.dist=50,wei="equal")
+lines(ajust_areia_q3, col="blue")
+```
+
+## Krigagem da Indicadora
+
+```{r}
+# definindo os locais para para as estimativas
+loci <- expand.grid(seq(min(dados$Latitude),max(dados$Latitude),1), seq(min(dados$Longitude),max(dados$Longitude),1)) #cria a malha a ser estimada
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_altitude_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q1))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q1 para altitude")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_altitude_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q2))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q2 para altitude")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_altitude_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_md))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Médio para altitude")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_altitude_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q3))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q3 para altitude")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_umidade_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q1))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q1 para umidade")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_umidade_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q2))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q2 para umidade")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_umidade_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_md))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Médio para umidade")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_umidade_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q3))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q3 para umidade")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_argila_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q1))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q1 para argila")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_argila_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q2))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q2 para argila")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_argila_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_md))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Médio para argila")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_argila_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q3))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q3 para argila")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_silte_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q1))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q1 para silte")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_silte_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q2))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q2 para silte")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_silte_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_md))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Médio para silte")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_silte_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q3))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q3 para silte")
+```
+
+```{r warning=FALSE}
+k = krige.conv(geo_areia_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_areia_q1))
+contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
+title(main="Mapa de probabilidades menores ou igual a Q1 para areia")
+```
