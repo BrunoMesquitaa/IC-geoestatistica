@@ -55,6 +55,17 @@ for (i in names(dados)[3:length(names(dados))]) {
 ## Transformando os Dados em Geodados
 
 ```{r}
+geo_altitude<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Altitude")
+geo_umidade<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Umidade")
+geo_argila<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Argila")
+geo_silte<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Silte")
+geo_areia<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
+                            data.col="Areia")
+
 geo_altitude_q1<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
                             data.col="Altitude_q1")
 geo_altitude_q2<-as.geodata(dados,coords.col=c("Latitude","Longitude"), 
@@ -101,7 +112,95 @@ geo_areia_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
                          data.col="Areia_q3")
 ```
 
-## Gráficos Espaciais
+## Análise Exploratória
+
+### Histograma e Boxplot
+```{r}
+boxplot(dados$Altitude, main="Altitude")
+```
+```{r}
+hist(dados$Altitude, main="Altitude")
+```
+
+```{r}
+boxplot(dados$Umidade, main="Umidade")
+```
+
+```{r}
+hist(dados$Umidade, main="Umidade")
+```
+
+```{r}
+boxplot(dados$Argila, main="Argila")
+```
+```{r}
+hist(dados$Argila, main="Argila")
+```
+
+```{r}
+boxplot(dados$Silte, main="Silte")
+```
+```{r}
+hist(dados$Silte, main="Silte")
+```
+
+```{r}
+boxplot(dados$Areia, main="Areia")
+```
+```{r}
+hist(dados$Areia, main="Areia")
+```
+#### Verificando Outlier
+```{r}
+sort(dados$Areia)
+```
+
+```{r}
+paste("outliers maior que",
+      quantile(dados$Areia,0.75)+( (quantile(dados$Areia,0.75)-quantile(dados$Areia,0.25)) *1.5),
+      "e menor que",
+      quantile(dados$Areia,0.25)-( (quantile(dados$Areia,0.75)-quantile(dados$Areia,0.25)) *1.5)
+      )
+```
+Apesar de ser um outlier não é um valor discrepante.
+
+## Análise Espaciais
+
+### Summary Espaciais
+```{r}
+summary(geo_altitude)
+```
+```{r}
+summary(geo_umidade)
+```
+```{r}
+summary(geo_argila)
+```
+```{r}
+summary(geo_silte)
+```
+```{r}
+summary(geo_areia)
+```
+### Gráficos Espaciais
+
+```{r}
+plot(geo_altitude)
+```
+```{r}
+plot(geo_umidade)
+```
+```{r}
+plot(geo_argila)
+```
+```{r}
+plot(geo_silte)
+```
+```{r}
+plot(geo_areia)
+```
+
+### Gráficos Espaciais das Dicotomica
 
 ```{r}
 points(geo_altitude_q1, main="Semivariograma altitude da dicotomica para Q1")
@@ -185,143 +284,150 @@ points(geo_areia_q3, main="Semivariograma areia da dicotomica para Q3")
 
 ## Ajustando o Semivariograma
 
+Distância
 ```{r}
-semi_altitude_q1 <- variog(geo_altitude_q1, max.dist=50)
+paste("distância 50%",180.346888*0.5," e distância 70%",180.346888*0.7)
+dist = round(180.346888*0.5)
+```
+
+
+```{r}
+semi_altitude_q1 <- variog(geo_altitude_q1, max.dist=dist)
 plot(semi_altitude_q1, main="Semivariograma altitude da dicotomica para Q1")
-ajust_altitude_q1 <- variofit(semi_altitude_q1, max.dist=50,wei="equal")
+ajust_altitude_q1 <- variofit(semi_altitude_q1, max.dist=dist,wei="equal")
 lines(ajust_altitude_q1, col="blue")
 ```
 
 ```{r}
-semi_altitude_q2 <- variog(geo_altitude_q2, max.dist=50)
+semi_altitude_q2 <- variog(geo_altitude_q2, max.dist=dist)
 plot(semi_altitude_q2, main="Semivariograma altitude da dicotomica para Q2")
-ajust_altitude_q2 <- variofit(semi_altitude_q2, max.dist=50,wei="equal")
+ajust_altitude_q2 <- variofit(semi_altitude_q2, max.dist=dist,wei="equal")
 lines(ajust_altitude_q2, col="blue")
 ```
 
 ```{r}
-semi_altitude_md <- variog(geo_altitude_md, max.dist=50)
+semi_altitude_md <- variog(geo_altitude_md, max.dist=dist)
 plot(semi_altitude_md, main="Semivariograma altitude da dicotomica para Médio")
-ajust_altitude_md <- variofit(semi_altitude_md, max.dist=50,wei="equal")
+ajust_altitude_md <- variofit(semi_altitude_md, max.dist=dist,wei="equal")
 lines(ajust_altitude_md, col="blue")
 ```
 
 ```{r}
-semi_altitude_q3 <- variog(geo_altitude_q3, max.dist=50)
+semi_altitude_q3 <- variog(geo_altitude_q3, max.dist=dist)
 plot(semi_altitude_q3, main="Semivariograma altitude da dicotomica para Q3")
-ajust_altitude_q3 <- variofit(semi_altitude_q1, max.dist=50,wei="equal")
+ajust_altitude_q3 <- variofit(semi_altitude_q3, max.dist=dist,wei="equal")
 lines(ajust_altitude_q3, col="blue")
 ```
 
 ```{r}
-semi_umidade_q1 <- variog(geo_umidade_q1, max.dist=50)
+semi_umidade_q1 <- variog(geo_umidade_q1, max.dist=dist)
 plot(semi_umidade_q1, main="Semivariograma umidade da dicotomica para Q1")
-ajust_umidade_q1 <- variofit(semi_umidade_q1, max.dist=50,wei="equal")
+ajust_umidade_q1 <- variofit(semi_umidade_q1, max.dist=dist,wei="equal")
 lines(ajust_umidade_q1, col="blue")
 ```
 
 ```{r}
-semi_umidade_q2 <- variog(geo_umidade_q2, max.dist=50)
+semi_umidade_q2 <- variog(geo_umidade_q2, max.dist=dist)
 plot(semi_umidade_q2, main="Semivariograma umidade da dicotomica para Q2")
-ajust_umidade_q2 <- variofit(semi_umidade_q2, max.dist=50,wei="equal")
+ajust_umidade_q2 <- variofit(semi_umidade_q2, max.dist=dist,wei="equal")
 lines(ajust_umidade_q2, col="blue")
 ```
 
 ```{r}
-semi_umidade_md <- variog(geo_umidade_md, max.dist=50)
+semi_umidade_md <- variog(geo_umidade_md, max.dist=dist)
 plot(semi_umidade_md, main="Semivariograma umidade da dicotomica para Médio")
-ajust_umidade_md <- variofit(semi_umidade_md, max.dist=50,wei="equal")
+ajust_umidade_md <- variofit(semi_umidade_md, max.dist=dist,wei="equal")
 lines(ajust_umidade_md, col="blue")
 ```
 
 ```{r}
-semi_umidade_q3 <- variog(geo_umidade_q3, max.dist=50)
+semi_umidade_q3 <- variog(geo_umidade_q3, max.dist=dist)
 plot(semi_umidade_q3, main="Semivariograma umidade da dicotomica para Q3")
-ajust_umidade_q3 <- variofit(semi_umidade_q3, max.dist=50,wei="equal")
+ajust_umidade_q3 <- variofit(semi_umidade_q3, max.dist=dist,wei="equal")
 lines(ajust_umidade_q3, col="blue")
 ```
 
 ```{r}
-semi_argila_q1 <- variog(geo_argila_q1, max.dist=50)
+semi_argila_q1 <- variog(geo_argila_q1, max.dist=dist)
 plot(semi_argila_q1, main="Semivariograma argila da dicotomica para Q1")
-ajust_argila_q1 <- variofit(semi_argila_q1, max.dist=50,wei="equal")
+ajust_argila_q1 <- variofit(semi_argila_q1, max.dist=dist,wei="equal")
 lines(ajust_argila_q1, col="blue")
 ```
 
 ```{r}
-semi_argila_q2 <- variog(geo_argila_q2, max.dist=50)
+semi_argila_q2 <- variog(geo_argila_q2, max.dist=dist)
 plot(semi_argila_q2, main="Semivariograma argila da dicotomica para Q2")
-ajust_argila_q2 <- variofit(semi_argila_q2, max.dist=50,wei="equal")
+ajust_argila_q2 <- variofit(semi_argila_q2, max.dist=dist,wei="equal")
 lines(ajust_argila_q2, col="blue")
 ```
 
 ```{r}
-semi_argila_md <- variog(geo_argila_q1, max.dist=50)
+semi_argila_md <- variog(geo_argila_md, max.dist=dist)
 plot(semi_argila_md, main="Semivariograma argila da dicotomica para Médio")
-ajust_argila_md <- variofit(semi_argila_md, max.dist=50,wei="equal")
+ajust_argila_md <- variofit(semi_argila_md, max.dist=dist,wei="equal")
 lines(ajust_argila_md, col="blue")
 ```
 
 ```{r}
-semi_argila_q3 <- variog(geo_argila_q3, max.dist=50)
+semi_argila_q3 <- variog(geo_argila_q3, max.dist=dist)
 plot(semi_argila_q3, main="Semivariograma argila da dicotomica para Q3")
-ajust_argila_q3 <- variofit(semi_argila_q3, max.dist=50,wei="equal")
+ajust_argila_q3 <- variofit(semi_argila_q3, max.dist=dist,wei="equal")
 lines(ajust_argila_q3, col="blue")
 ```
 
 ```{r}
-semi_silte_q1 <- variog(geo_silte_q1, max.dist=50)
+semi_silte_q1 <- variog(geo_silte_q1, max.dist=dist)
 plot(semi_silte_q1, main="Semivariograma silte da dicotomica para Q1")
-ajust_silte_q1 <- variofit(semi_silte_q1, max.dist=50,wei="equal")
+ajust_silte_q1 <- variofit(semi_silte_q1, max.dist=dist,wei="equal")
 lines(ajust_silte_q1, col="blue")
 ```
 
 ```{r}
-semi_silte_q2 <- variog(geo_silte_q2, max.dist=50)
+semi_silte_q2 <- variog(geo_silte_q2, max.dist=dist)
 plot(semi_silte_q2, main="Semivariograma silte da dicotomica para Q2")
-ajust_silte_q2 <- variofit(semi_silte_q2, max.dist=50,wei="equal")
+ajust_silte_q2 <- variofit(semi_silte_q2, max.dist=dist,wei="equal")
 lines(ajust_silte_q2, col="blue")
 ```
 
 ```{r}
-semi_silte_md <- variog(geo_silte_md, max.dist=50)
+semi_silte_md <- variog(geo_silte_md, max.dist=dist)
 plot(semi_silte_md, main="Semivariograma silte da dicotomica para Médio")
-ajust_silte_md <- variofit(semi_silte_md, max.dist=50,wei="equal")
+ajust_silte_md <- variofit(semi_silte_md, max.dist=dist,wei="equal")
 lines(ajust_silte_md, col="blue")
 ```
 
 ```{r}
-semi_silte_q3 <- variog(geo_silte_q3, max.dist=50)
+semi_silte_q3 <- variog(geo_silte_q3, max.dist=dist)
 plot(semi_silte_q3, main="Semivariograma silte da dicotomica para Q3")
-ajust_silte_q3 <- variofit(semi_silte_q3, max.dist=50,wei="equal")
+ajust_silte_q3 <- variofit(semi_silte_q3, max.dist=dist,wei="equal")
 lines(ajust_silte_q3, col="blue")
 ```
 
 ```{r}
-semi_areia_q1 <- variog(geo_areia_q1, max.dist=50)
+semi_areia_q1 <- variog(geo_areia_q1, max.dist=dist)
 plot(semi_areia_q1, main="Semivariograma areia da dicotomica para Q1")
-ajust_areia_q1 <- variofit(semi_areia_q1, max.dist=50,wei="equal")
+ajust_areia_q1 <- variofit(semi_areia_q1, max.dist=dist,wei="equal")
 lines(ajust_areia_q1, col="blue")
 ```
 
 ```{r}
-semi_areia_q2 <- variog(geo_areia_q2, max.dist=50)
+semi_areia_q2 <- variog(geo_areia_q2, max.dist=dist)
 plot(semi_areia_q2, main="Semivariograma areia da dicotomica para Q2")
-ajust_areia_q2 <- variofit(semi_areia_q2, max.dist=50,wei="equal")
+ajust_areia_q2 <- variofit(semi_areia_q2, max.dist=dist,wei="equal")
 lines(ajust_areia_q2, col="blue")
 ```
 
 ```{r}
-semi_areia_md <- variog(geo_areia_md, max.dist=50)
+semi_areia_md <- variog(geo_areia_md, max.dist=dist)
 plot(semi_areia_md, main="Semivariograma areia da dicotomica para Médio")
-ajust_areia_md <- variofit(semi_areia_md, max.dist=50,wei="equal")
+ajust_areia_md <- variofit(semi_areia_md, max.dist=dist,wei="equal")
 lines(ajust_areia_md, col="blue")
 ```
 
 ```{r}
-semi_areia_q3 <- variog(geo_areia_q3, max.dist=50)
+semi_areia_q3 <- variog(geo_areia_q3, max.dist=dist)
 plot(semi_areia_q3, main="Semivariograma areia da dicotomica para Q3")
-ajust_areia_q3 <- variofit(semi_areia_q3, max.dist=50,wei="equal")
+ajust_areia_q3 <- variofit(semi_areia_q3, max.dist=dist,wei="equal")
 lines(ajust_areia_q3, col="blue")
 ```
 
