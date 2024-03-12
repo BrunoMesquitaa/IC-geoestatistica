@@ -33,6 +33,16 @@ dicotomica <- function(df,col){
   df[paste0(col,'_q3')] = ifelse(df[col]<=q3,1,0)
   df
 }
+
+validacao <- function(ajust,geo){
+  val<-xvalid(geo,model=ajust)
+  
+  print(paste('media error:',mean(val$error),'var error:',var(val$error)))
+  print(paste('media std.error:',mean(val$std.error),'var std.error:',var(val$std.error)))
+  
+  r1<-lm(val$data~val$predicted)
+  summary(r1)
+}
 ```
 
 ## Lendo Arquivo
@@ -292,144 +302,417 @@ dist = round(180.346888*0.5)
 
 
 ```{r}
-semi_altitude_q1 <- variog(geo_altitude_q1, max.dist=dist)
-plot(semi_altitude_q1, main="Semivariograma altitude da dicotomica para Q1")
-ajust_altitude_q1 <- variofit(semi_altitude_q1, max.dist=dist,wei="equal")
-lines(ajust_altitude_q1, col="blue")
-```
-
-```{r}
-semi_altitude_q2 <- variog(geo_altitude_q2, max.dist=dist)
-plot(semi_altitude_q2, main="Semivariograma altitude da dicotomica para Q2")
-ajust_altitude_q2 <- variofit(semi_altitude_q2, max.dist=dist,wei="equal")
-lines(ajust_altitude_q2, col="blue")
-```
-
-```{r}
-semi_altitude_md <- variog(geo_altitude_md, max.dist=dist)
-plot(semi_altitude_md, main="Semivariograma altitude da dicotomica para Médio")
-ajust_altitude_md <- variofit(semi_altitude_md, max.dist=dist,wei="equal")
-lines(ajust_altitude_md, col="blue")
-```
-
-```{r}
-semi_altitude_q3 <- variog(geo_altitude_q3, max.dist=dist)
-plot(semi_altitude_q3, main="Semivariograma altitude da dicotomica para Q3")
-ajust_altitude_q3 <- variofit(semi_altitude_q3, max.dist=dist,wei="equal")
-lines(ajust_altitude_q3, col="blue")
-```
-
-```{r}
-semi_umidade_q1 <- variog(geo_umidade_q1, max.dist=dist)
-plot(semi_umidade_q1, main="Semivariograma umidade da dicotomica para Q1")
-ajust_umidade_q1 <- variofit(semi_umidade_q1, max.dist=dist,wei="equal")
-lines(ajust_umidade_q1, col="blue")
-```
-
-```{r}
-semi_umidade_q2 <- variog(geo_umidade_q2, max.dist=dist)
-plot(semi_umidade_q2, main="Semivariograma umidade da dicotomica para Q2")
-ajust_umidade_q2 <- variofit(semi_umidade_q2, max.dist=dist,wei="equal")
-lines(ajust_umidade_q2, col="blue")
-```
-
-```{r}
-semi_umidade_md <- variog(geo_umidade_md, max.dist=dist)
-plot(semi_umidade_md, main="Semivariograma umidade da dicotomica para Médio")
-ajust_umidade_md <- variofit(semi_umidade_md, max.dist=dist,wei="equal")
-lines(ajust_umidade_md, col="blue")
-```
-
-```{r}
-semi_umidade_q3 <- variog(geo_umidade_q3, max.dist=dist)
-plot(semi_umidade_q3, main="Semivariograma umidade da dicotomica para Q3")
-ajust_umidade_q3 <- variofit(semi_umidade_q3, max.dist=dist,wei="equal")
-lines(ajust_umidade_q3, col="blue")
-```
-
-```{r}
 semi_argila_q1 <- variog(geo_argila_q1, max.dist=dist)
+ajust_argila_q1_1 <- variofit(semi_argila_q1, max.dist=dist,wei="equal")
+ajust_argila_q1_2 <- variofit(semi_argila_q1, max.dist=dist)
+ajust_argila_q1_3 <- variofit(semi_argila_q1, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_argila_q1_1<-eyefit(semi_argila_q1)
+#      cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.22  30  0.03  <NA>   <NA> 89.8719682052843
+
+
+eye_argila_q1_2<-eyefit(semi_argila_q1)
+# cov.model sigmasq  phi tausq kappa kappa2 practicalRange
+# 1 spherical     0.2 67.7  0.02  <NA>   <NA>           67.7
 plot(semi_argila_q1, main="Semivariograma argila da dicotomica para Q1")
-ajust_argila_q1 <- variofit(semi_argila_q1, max.dist=dist,wei="equal")
-lines(ajust_argila_q1, col="blue")
+lines(ajust_argila_q1_1, col="black")
+lines(ajust_argila_q1_2, col="green")
+lines(ajust_argila_q1_3, col="pink")
+lines(eye_argila_q1_1, col="red")
+lines(eye_argila_q1_2, col="blue")
+
 ```
+```{r message=FALSE, warning=FALSE}
+print('ajust_argila_q1_1')
+validacao(ajust_argila_q1_1,geo_argila_q1)
+
+print('ajust_argila_q1_2')
+validacao(ajust_argila_q1_2,geo_argila_q1)
+
+print('ajust_argila_q1_3')
+validacao(ajust_argila_q1_3,geo_argila_q1)
+
+print('eye_argila_q1_1')
+validacao(eye_argila_q1_1,geo_argila_q1)
+
+print('eye_argila_q1_2')
+validacao(eye_argila_q1_2,geo_argila_q1)
+```
+WIN => eye_argila_q1_1
 
 ```{r}
 semi_argila_q2 <- variog(geo_argila_q2, max.dist=dist)
-plot(semi_argila_q2, main="Semivariograma argila da dicotomica para Q2")
-ajust_argila_q2 <- variofit(semi_argila_q2, max.dist=dist,wei="equal")
-lines(ajust_argila_q2, col="blue")
+ajust_argila_q2_1 <- variofit(semi_argila_q2, max.dist=dist,wei="equal")
+ajust_argila_q2_2 <- variofit(semi_argila_q2, max.dist=dist)
+ajust_argila_q2_3 <- variofit(semi_argila_q2, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_argila_q2_1<-eyefit(semi_argila_q2)
+
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential     0.2  30   0.1  <NA>   <NA> 89.8719682052843
+
+
+eye_argila_q2_2<-eyefit(semi_argila_q2)
+# cov.model sigmasq phi tausq kappa kappa2 practicalRange
+# 1 spherical    0.18  60   0.1  <NA>   <NA>             60
+plot(semi_argila_q2, main="Semivariograma argila da dicotomica para q2")
+lines(ajust_argila_q2_1, col="black")
+lines(ajust_argila_q2_2, col="green")
+lines(ajust_argila_q2_3, col="pink")
+lines(eye_argila_q2_1, col="red")
+lines(eye_argila_q2_2, col="blue")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_argila_q2_1')
+validacao(ajust_argila_q2_1,geo_argila_q2)
+
+print('ajust_argila_q2_2')
+validacao(ajust_argila_q2_2,geo_argila_q2)
+
+print('ajust_argila_q2_3')
+validacao(ajust_argila_q2_3,geo_argila_q2)
+
+print('eye_argila_q2_1')
+validacao(eye_argila_q2_1,geo_argila_q2)
+
+print('eye_argila_q2_2')
+validacao(eye_argila_q2_2,geo_argila_q2)
+```
+WIN => eye_argila_q2_1
 
 ```{r}
 semi_argila_md <- variog(geo_argila_md, max.dist=dist)
-plot(semi_argila_md, main="Semivariograma argila da dicotomica para Médio")
-ajust_argila_md <- variofit(semi_argila_md, max.dist=dist,wei="equal")
-lines(ajust_argila_md, col="blue")
+ajust_argila_md_1 <- variofit(semi_argila_md, max.dist=dist,wei="equal")
+ajust_argila_md_2 <- variofit(semi_argila_md, max.dist=dist)
+ajust_argila_md_3 <- variofit(semi_argila_md, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_argila_md_1<-eyefit(semi_argila_md)
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.24  30  0.06  <NA>   <NA> 89.8719682052843
+
+
+eye_argila_md_2<-eyefit(semi_argila_md)
+# # cov.model sigmasq phi tausq kappa kappa2 practicalRange
+# 1 spherical    0.21  80  0.09  <NA>   <NA>             80
+
+plot(semi_argila_md, main="Semivariograma argila da dicotomica para md")
+lines(ajust_argila_md_1, col="black")
+lines(ajust_argila_md_2, col="green")
+lines(ajust_argila_md_3, col="pink")
+lines(eye_argila_md_1, col="red")
+lines(eye_argila_md_2, col="blue")
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_argila_md_1')
+validacao(ajust_argila_md_1,geo_argila_md)
+
+print('ajust_argila_md_2')
+validacao(ajust_argila_md_2,geo_argila_md)
+
+print('ajust_argila_md_3')
+validacao(ajust_argila_md_3,geo_argila_md)
+
+print('eye_argila_md_1')
+validacao(eye_argila_md_1,geo_argila_md)
+
+print('eye_argila_md_2')
+validacao(eye_argila_md_2,geo_argila_md)
+```
+WIN => eye_argila_md_2
 
 ```{r}
 semi_argila_q3 <- variog(geo_argila_q3, max.dist=dist)
-plot(semi_argila_q3, main="Semivariograma argila da dicotomica para Q3")
-ajust_argila_q3 <- variofit(semi_argila_q3, max.dist=dist,wei="equal")
-lines(ajust_argila_q3, col="blue")
+ajust_argila_q3_1 <- variofit(semi_argila_q3, max.dist=dist,wei="equal")
+ajust_argila_q3_2 <- variofit(semi_argila_q3, max.dist=dist)
+ajust_argila_q3_3 <- variofit(semi_argila_q3, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_argila_q3_1<-eyefit(semi_argila_q3)
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1      wave    0.04   7  0.15  <NA>   <NA> 20.9401753348203
+
+
+plot(semi_argila_q3, main="Semivariograma argila da dicotomica para q3")
+lines(ajust_argila_q3_1, col="black")
+lines(ajust_argila_q3_2, col="green")
+lines(ajust_argila_q3_3, col="pink")
+lines(eye_argila_q3_1, col="red")
+# lines(eye_argila_q3_2, col="blue")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_argila_q3_1')
+validacao(ajust_argila_q3_1,geo_argila_q3)
+
+print('ajust_argila_q3_2')
+validacao(ajust_argila_q3_2,geo_argila_q3)
+
+print('ajust_argila_q3_3')
+validacao(ajust_argila_q3_3,geo_argila_q3)
+
+print('eye_argila_q3_1')
+validacao(eye_argila_q3_1,geo_argila_q3)
+```
+PEPITA PURA
 
 ```{r}
 semi_silte_q1 <- variog(geo_silte_q1, max.dist=dist)
-plot(semi_silte_q1, main="Semivariograma silte da dicotomica para Q1")
-ajust_silte_q1 <- variofit(semi_silte_q1, max.dist=dist,wei="equal")
-lines(ajust_silte_q1, col="blue")
+ajust_silte_q1_1 <- variofit(semi_silte_q1, max.dist=dist,wei="equal")
+ajust_silte_q1_2 <- variofit(semi_silte_q1, max.dist=dist)
+ajust_silte_q1_3 <- variofit(semi_silte_q1, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_silte_q1_1<-eyefit(semi_silte_q1)
+
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.17  30   0.1  <NA>   <NA> 89.8719682052843
+
+
+eye_silte_q1_2<-eyefit(semi_silte_q1)
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1  gaussian     0.1  28  0.14  <NA>   <NA> 48.4628901559608
+
+plot(semi_silte_q1, main="Semivariograma silte da dicotomica para q1")
+lines(ajust_silte_q1_1, col="black")
+lines(ajust_silte_q1_2, col="green")
+lines(ajust_silte_q1_3, col="pink")
+lines(eye_silte_q1_1, col="red")
+lines(eye_silte_q1_2, col="blue")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_silte_q1_2')
+validacao(ajust_silte_q1_2,geo_silte_q1)
+
+print('eye_silte_q1_1')
+validacao(eye_silte_q1_1,geo_silte_q1)
+
+print('eye_silte_q1_2')
+validacao(eye_silte_q1_2,geo_silte_q1)
+```
+WIN => eye_silte_q1_1
 
 ```{r}
 semi_silte_q2 <- variog(geo_silte_q2, max.dist=dist)
-plot(semi_silte_q2, main="Semivariograma silte da dicotomica para Q2")
-ajust_silte_q2 <- variofit(semi_silte_q2, max.dist=dist,wei="equal")
-lines(ajust_silte_q2, col="blue")
+ajust_silte_q2_1 <- variofit(semi_silte_q2, max.dist=dist,wei="equal")
+ajust_silte_q2_2 <- variofit(semi_silte_q2, max.dist=dist)
+ajust_silte_q2_3 <- variofit(semi_silte_q2, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_silte_q2_1<-eyefit(semi_silte_q2)
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.14  30  0.13  <NA>   <NA> 89.8719682052843
+
+plot(semi_silte_q2, main="Semivariograma silte da dicotomica para q2")
+lines(ajust_silte_q2_1, col="black")
+lines(ajust_silte_q2_2, col="green")
+lines(ajust_silte_q2_3, col="pink")
+lines(eye_silte_q2_1, col="red")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_silte_q2_1')
+validacao(ajust_silte_q2_1,geo_silte_q2)
+
+print('ajust_silte_q2_2')
+validacao(ajust_silte_q2_2,geo_silte_q2)
+
+print('ajust_silte_q2_3')
+validacao(ajust_silte_q2_3,geo_silte_q2)
+
+print('eye_silte_q2_1')
+validacao(eye_silte_q2_1,geo_silte_q2)
+```
+WIN => eye_silte_q2_1
 
 ```{r}
 semi_silte_md <- variog(geo_silte_md, max.dist=dist)
-plot(semi_silte_md, main="Semivariograma silte da dicotomica para Médio")
-ajust_silte_md <- variofit(semi_silte_md, max.dist=dist,wei="equal")
-lines(ajust_silte_md, col="blue")
+ajust_silte_md_1 <- variofit(semi_silte_md, max.dist=dist,wei="equal")
+ajust_silte_md_2 <- variofit(semi_silte_md, max.dist=dist)
+ajust_silte_md_3 <- variofit(semi_silte_md, max.dist=dist,cov.model='spherical',wei="equal")
+
+plot(semi_silte_md, main="Semivariograma silte da dicotomica para md")
+lines(ajust_silte_md_1, col="black")
+lines(ajust_silte_md_2, col="green")
+lines(ajust_silte_md_3, col="pink")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_silte_md_1')
+validacao(ajust_silte_md_1,geo_silte_md)
+
+print('ajust_silte_md_2')
+validacao(ajust_silte_md_2,geo_silte_md)
+
+print('ajust_silte_md_3')
+validacao(ajust_silte_md_3,geo_silte_md)
+
+```
+WIN => ajust_silte_md_1
 
 ```{r}
 semi_silte_q3 <- variog(geo_silte_q3, max.dist=dist)
-plot(semi_silte_q3, main="Semivariograma silte da dicotomica para Q3")
-ajust_silte_q3 <- variofit(semi_silte_q3, max.dist=dist,wei="equal")
-lines(ajust_silte_q3, col="blue")
+ajust_silte_q3_1 <- variofit(semi_silte_q3, max.dist=dist,wei="equal")
+ajust_silte_q3_2 <- variofit(semi_silte_q3, max.dist=dist)
+ajust_silte_q3_3 <- variofit(semi_silte_q3, max.dist=dist,cov.model='spherical',wei="equal")
+
+plot(semi_silte_q3, main="Semivariograma silte da dicotomica para q3")
+lines(ajust_silte_q3_1, col="black")
+lines(ajust_silte_q3_2, col="green")
+lines(ajust_silte_q3_3, col="pink")
+
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_silte_q3_1')
+validacao(ajust_silte_q3_1,geo_silte_q3)
+
+print('ajust_silte_q3_2')
+validacao(ajust_silte_q3_2,geo_silte_q3)
+
+print('ajust_silte_q3_3')
+validacao(ajust_silte_q3_3,geo_silte_q3)
+
+```
+PEPITA PURA
 
 ```{r}
 semi_areia_q1 <- variog(geo_areia_q1, max.dist=dist)
-plot(semi_areia_q1, main="Semivariograma areia da dicotomica para Q1")
-ajust_areia_q1 <- variofit(semi_areia_q1, max.dist=dist,wei="equal")
-lines(ajust_areia_q1, col="blue")
+ajust_areia_q1_1 <- variofit(semi_areia_q1, max.dist=dist,wei="equal")
+ajust_areia_q1_2 <- variofit(semi_areia_q1, max.dist=dist)
+ajust_areia_q1_3 <- variofit(semi_areia_q1, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_areia_q1_1<-eyefit(semi_areia_q1)
+# cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1      wave    0.06 9.5  0.15  <NA>   <NA> 28.4188361165234
+
+plot(semi_areia_q1, main="Semivariograma areia da dicotomica para q1")
+lines(ajust_areia_q1_1, col="black")
+lines(ajust_areia_q1_2, col="green")
+lines(ajust_areia_q1_3, col="pink")
+lines(eye_areia_q1_1, col="red")
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_areia_q1_1')
+validacao(ajust_areia_q1_1,geo_areia_q1)
+
+print('ajust_areia_q1_2')
+validacao(ajust_areia_q1_2,geo_areia_q1)
+
+print('ajust_areia_q1_3')
+validacao(ajust_areia_q1_3,geo_areia_q1)
+
+print('eye_areia_q1_1')
+validacao(eye_areia_q1_1,geo_areia_q1)
+
+```
+WIN => eye_areia_q1_1
 
 ```{r}
 semi_areia_q2 <- variog(geo_areia_q2, max.dist=dist)
-plot(semi_areia_q2, main="Semivariograma areia da dicotomica para Q2")
-ajust_areia_q2 <- variofit(semi_areia_q2, max.dist=dist,wei="equal")
-lines(ajust_areia_q2, col="blue")
+ajust_areia_q2_1 <- variofit(semi_areia_q2, max.dist=dist,wei="equal")
+ajust_areia_q2_2 <- variofit(semi_areia_q2, max.dist=dist)
+ajust_areia_q2_3 <- variofit(semi_areia_q2, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_areia_q2_1<-eyefit(semi_areia_q2)
+#     cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.14  20  0.13  <NA>   <NA> 59.9146454703795
+
+plot(semi_areia_q2, main="Semivariograma areia da dicotomica para q2")
+lines(ajust_areia_q2_1, col="black")
+lines(ajust_areia_q2_2, col="green")
+lines(ajust_areia_q2_3, col="pink")
+lines(eye_areia_q2_1, col="red")
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_areia_q2_1')
+validacao(ajust_areia_q2_1,geo_areia_q2)
+
+print('ajust_areia_q2_2')
+validacao(ajust_areia_q2_2,geo_areia_q2)
+
+print('ajust_areia_q2_3')
+validacao(ajust_areia_q2_3,geo_areia_q2)
+
+print('eye_areia_q2_1')
+validacao(eye_areia_q2_1,geo_areia_q2)
+
+```
+WIN => eye_areia_q2_1
 
 ```{r}
 semi_areia_md <- variog(geo_areia_md, max.dist=dist)
-plot(semi_areia_md, main="Semivariograma areia da dicotomica para Médio")
-ajust_areia_md <- variofit(semi_areia_md, max.dist=dist,wei="equal")
-lines(ajust_areia_md, col="blue")
+ajust_areia_md_1 <- variofit(semi_areia_md, max.dist=dist,wei="equal")
+ajust_areia_md_2 <- variofit(semi_areia_md, max.dist=dist)
+ajust_areia_md_3 <- variofit(semi_areia_md, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_areia_md_1<-eyefit(semi_areia_md)
+#     cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1 exponential    0.14  20  0.13  <NA>   <NA> 59.9146454703795
+
+plot(semi_areia_md, main="Semivariograma areia da dicotomica para md")
+lines(ajust_areia_md_1, col="black")
+lines(ajust_areia_md_2, col="green")
+lines(ajust_areia_md_3, col="pink")
+lines(eye_areia_md_1, col="red")
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_areia_md_1')
+validacao(ajust_areia_md_1,geo_areia_md)
+
+print('ajust_areia_md_2')
+validacao(ajust_areia_md_2,geo_areia_md)
+
+print('ajust_areia_md_3')
+validacao(ajust_areia_md_3,geo_areia_md)
+
+print('eye_areia_md_1')
+validacao(eye_areia_md_1,geo_areia_md)
+
+```
+
+WIN => eye_areia_md_1
 
 ```{r}
 semi_areia_q3 <- variog(geo_areia_q3, max.dist=dist)
-plot(semi_areia_q3, main="Semivariograma areia da dicotomica para Q3")
-ajust_areia_q3 <- variofit(semi_areia_q3, max.dist=dist,wei="equal")
-lines(ajust_areia_q3, col="blue")
+ajust_areia_q3_1 <- variofit(semi_areia_q3, max.dist=dist,wei="equal")
+ajust_areia_q3_2 <- variofit(semi_areia_q3, max.dist=dist)
+ajust_areia_q3_3 <- variofit(semi_areia_q3, max.dist=dist,cov.model='spherical',wei="equal")
+
+eye_areia_q3_1<-eyefit(semi_areia_q3)
+#     cov.model sigmasq phi tausq kappa kappa2   practicalRange
+# 1  gaussian    0.07  40  0.12  <NA>   <NA> 69.2327606520156
+
+plot(semi_areia_q3, main="Semivariograma areia da dicotomica para q3")
+lines(ajust_areia_q3_1, col="black")
+lines(ajust_areia_q3_2, col="green")
+lines(ajust_areia_q3_3, col="pink")
+lines(eye_areia_q3_1, col="red")
 ```
+
+```{r message=FALSE, warning=FALSE}
+print('ajust_areia_q3_1')
+validacao(ajust_areia_q3_1,geo_areia_q3)
+
+print('ajust_areia_q3_2')
+validacao(ajust_areia_q3_2,geo_areia_q3)
+
+print('ajust_areia_q3_3')
+validacao(ajust_areia_q3_3,geo_areia_q3)
+
+print('eye_areia_q3_1')
+validacao(eye_areia_q3_1,geo_areia_q3)
+
+```
+WIN => eye_areia_q3_1
 
 ## Krigagem da Indicadora
 
@@ -438,104 +721,63 @@ lines(ajust_areia_q3, col="blue")
 loci <- expand.grid(seq(min(dados$Latitude),max(dados$Latitude),1), seq(min(dados$Longitude),max(dados$Longitude),1)) #cria a malha a ser estimada
 ```
 
+
 ```{r warning=FALSE}
-k = krige.conv(geo_altitude_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q1))
+k = krige.conv(geo_argila_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_argila_q1_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q1 para altitude")
+title(main="Mapa de prob < ou = a Q1 para argila")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_altitude_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q2))
+k = krige.conv(geo_argila_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_argila_q2_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q2 para altitude")
+title(main="Mapa de prob < ou = a Q2 para argila")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_altitude_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_md))
+k = krige.conv(geo_argila_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_argila_md_2))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Médio para altitude")
+title(main="Mapa de prob < ou = a Médio para argila")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_altitude_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_altitude_q3))
+k = krige.conv(geo_silte_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_silte_q1_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q3 para altitude")
+title(main="Mapa de prob < ou = a Q1 para silte")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_umidade_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q1))
+k = krige.conv(geo_silte_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_silte_q2_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q1 para umidade")
+title(main="Mapa de prob < ou = a Q2 para silte")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_umidade_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q2))
+k = krige.conv(geo_silte_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_md_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q2 para umidade")
+title(main="Mapa de prob < ou = a Médio para silte")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_umidade_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_md))
+k = krige.conv(geo_areia_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_areia_q1_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Médio para umidade")
+title(main="Mapa de prob < ou = a Q1 para areia")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_umidade_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_umidade_q3))
+k = krige.conv(geo_areia_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_areia_q2_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q3 para umidade")
+title(main="Mapa de prob < ou = a Q1 para areia")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_argila_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q1))
+k = krige.conv(geo_areia_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_areia_md_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q1 para argila")
+title(main="Mapa de prob < ou = a Q1 para areia")
 ```
 
 ```{r warning=FALSE}
-k = krige.conv(geo_argila_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q2))
+k = krige.conv(geo_areia_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_areia_q3_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q2 para argila")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_argila_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_md))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Médio para argila")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_argila_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_argila_q3))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q3 para argila")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_silte_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q1))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q1 para silte")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_silte_q2, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q2))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q2 para silte")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_silte_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_md))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Médio para silte")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_silte_q3, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_silte_q3))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q3 para silte")
-```
-
-```{r warning=FALSE}
-k = krige.conv(geo_areia_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = ajust_areia_q1))
-contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de probabilidades menores ou igual a Q1 para areia")
+title(main="Mapa de prob < ou = a Q1 para areia")
 ```
