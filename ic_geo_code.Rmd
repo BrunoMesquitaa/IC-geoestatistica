@@ -518,7 +518,7 @@ print('eye_silte_q1_2')
 validacao(eye_silte_q1_2,geo_silte_q1)
 ```
 
-WIN =\> eye_silte_q1_1
+WIN =\> eye_silte_q1_2
 
 ```{r}
 semi_silte_q2 <- variog(geo_silte_q2, max.dist=dist)
@@ -802,7 +802,7 @@ title(main="Mapa de prob < ou = a Q1 para areia")
 ```{r warning=FALSE}
 k = krige.conv(geo_areia_md, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_areia_md_1))
 contour(k, filled=TRUE, levels=seq(0.00,1.00, by=0.1))
-title(main="Mapa de prob < ou = a Q1 para areia")
+title(main="Mapa de prob < ou = MD para areia")
 ```
 
 ```{r warning=FALSE}
