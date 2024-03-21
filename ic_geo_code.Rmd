@@ -125,9 +125,11 @@ geo_areia_q3<-as.geodata(dados,coords.col=c("Latitude","Longitude"),
 ## Análise Exploratória
 
 ### Histograma e Boxplot
+
 ```{r}
 boxplot(dados$Altitude, main="Altitude")
 ```
+
 ```{r}
 hist(dados$Altitude, main="Altitude")
 ```
@@ -143,6 +145,7 @@ hist(dados$Umidade, main="Umidade")
 ```{r}
 boxplot(dados$Argila, main="Argila")
 ```
+
 ```{r}
 hist(dados$Argila, main="Argila")
 ```
@@ -150,6 +153,7 @@ hist(dados$Argila, main="Argila")
 ```{r}
 boxplot(dados$Silte, main="Silte")
 ```
+
 ```{r}
 hist(dados$Silte, main="Silte")
 ```
@@ -157,10 +161,13 @@ hist(dados$Silte, main="Silte")
 ```{r}
 boxplot(dados$Areia, main="Areia")
 ```
+
 ```{r}
 hist(dados$Areia, main="Areia")
 ```
+
 #### Verificando Outlier
+
 ```{r}
 sort(dados$Areia)
 ```
@@ -172,40 +179,51 @@ paste("outliers maior que",
       quantile(dados$Areia,0.25)-( (quantile(dados$Areia,0.75)-quantile(dados$Areia,0.25)) *1.5)
       )
 ```
+
 Apesar de ser um outlier não é um valor discrepante.
 
 ## Análise Espaciais
 
 ### Summary Espaciais
+
 ```{r}
 summary(geo_altitude)
 ```
+
 ```{r}
 summary(geo_umidade)
 ```
+
 ```{r}
 summary(geo_argila)
 ```
+
 ```{r}
 summary(geo_silte)
 ```
+
 ```{r}
 summary(geo_areia)
 ```
+
 ### Gráficos Espaciais
 
 ```{r}
 plot(geo_altitude)
 ```
+
 ```{r}
 plot(geo_umidade)
 ```
+
 ```{r}
 plot(geo_argila)
 ```
+
 ```{r}
 plot(geo_silte)
 ```
+
 ```{r}
 plot(geo_areia)
 ```
@@ -295,11 +313,11 @@ points(geo_areia_q3, main="Semivariograma areia da dicotomica para Q3")
 ## Ajustando o Semivariograma
 
 Distância
+
 ```{r}
 paste("distância 50%",180.346888*0.5," e distância 70%",180.346888*0.7)
 dist = round(180.346888*0.5)
 ```
-
 
 ```{r}
 semi_argila_q1 <- variog(geo_argila_q1, max.dist=dist)
@@ -323,6 +341,7 @@ lines(eye_argila_q1_1, col="red")
 lines(eye_argila_q1_2, col="blue")
 
 ```
+
 ```{r message=FALSE, warning=FALSE}
 print('ajust_argila_q1_1')
 validacao(ajust_argila_q1_1,geo_argila_q1)
@@ -339,7 +358,8 @@ validacao(eye_argila_q1_1,geo_argila_q1)
 print('eye_argila_q1_2')
 validacao(eye_argila_q1_2,geo_argila_q1)
 ```
-WIN => eye_argila_q1_1
+
+WIN =\> eye_argila_q1_1
 
 ```{r}
 semi_argila_q2 <- variog(geo_argila_q2, max.dist=dist)
@@ -381,7 +401,8 @@ validacao(eye_argila_q2_1,geo_argila_q2)
 print('eye_argila_q2_2')
 validacao(eye_argila_q2_2,geo_argila_q2)
 ```
-WIN => eye_argila_q2_1
+
+WIN =\> eye_argila_q2_1
 
 ```{r}
 semi_argila_md <- variog(geo_argila_md, max.dist=dist)
@@ -422,7 +443,8 @@ validacao(eye_argila_md_1,geo_argila_md)
 print('eye_argila_md_2')
 validacao(eye_argila_md_2,geo_argila_md)
 ```
-WIN => eye_argila_md_2
+
+WIN =\> eye_argila_md_2
 
 ```{r}
 semi_argila_q3 <- variog(geo_argila_q3, max.dist=dist)
@@ -457,6 +479,7 @@ validacao(ajust_argila_q3_3,geo_argila_q3)
 print('eye_argila_q3_1')
 validacao(eye_argila_q3_1,geo_argila_q3)
 ```
+
 PEPITA PURA
 
 ```{r}
@@ -494,7 +517,8 @@ validacao(eye_silte_q1_1,geo_silte_q1)
 print('eye_silte_q1_2')
 validacao(eye_silte_q1_2,geo_silte_q1)
 ```
-WIN => eye_silte_q1_1
+
+WIN =\> eye_silte_q1_1
 
 ```{r}
 semi_silte_q2 <- variog(geo_silte_q2, max.dist=dist)
@@ -527,7 +551,8 @@ validacao(ajust_silte_q2_3,geo_silte_q2)
 print('eye_silte_q2_1')
 validacao(eye_silte_q2_1,geo_silte_q2)
 ```
-WIN => eye_silte_q2_1
+
+WIN =\> eye_silte_q2_1
 
 ```{r}
 semi_silte_md <- variog(geo_silte_md, max.dist=dist)
@@ -553,7 +578,8 @@ print('ajust_silte_md_3')
 validacao(ajust_silte_md_3,geo_silte_md)
 
 ```
-WIN => ajust_silte_md_1
+
+WIN =\> ajust_silte_md_1
 
 ```{r}
 semi_silte_q3 <- variog(geo_silte_q3, max.dist=dist)
@@ -579,6 +605,7 @@ print('ajust_silte_q3_3')
 validacao(ajust_silte_q3_3,geo_silte_q3)
 
 ```
+
 PEPITA PURA
 
 ```{r}
@@ -612,7 +639,8 @@ print('eye_areia_q1_1')
 validacao(eye_areia_q1_1,geo_areia_q1)
 
 ```
-WIN => eye_areia_q1_1
+
+WIN =\> eye_areia_q1_1
 
 ```{r}
 semi_areia_q2 <- variog(geo_areia_q2, max.dist=dist)
@@ -645,7 +673,8 @@ print('eye_areia_q2_1')
 validacao(eye_areia_q2_1,geo_areia_q2)
 
 ```
-WIN => eye_areia_q2_1
+
+WIN =\> eye_areia_q2_1
 
 ```{r}
 semi_areia_md <- variog(geo_areia_md, max.dist=dist)
@@ -679,7 +708,7 @@ validacao(eye_areia_md_1,geo_areia_md)
 
 ```
 
-WIN => eye_areia_md_1
+WIN =\> eye_areia_md_1
 
 ```{r}
 semi_areia_q3 <- variog(geo_areia_q3, max.dist=dist)
@@ -712,7 +741,8 @@ print('eye_areia_q3_1')
 validacao(eye_areia_q3_1,geo_areia_q3)
 
 ```
-WIN => eye_areia_q3_1
+
+WIN =\> eye_areia_q3_1
 
 ## Krigagem da Indicadora
 
@@ -720,7 +750,6 @@ WIN => eye_areia_q3_1
 # definindo os locais para para as estimativas
 loci <- expand.grid(seq(min(dados$Latitude),max(dados$Latitude),1), seq(min(dados$Longitude),max(dados$Longitude),1)) #cria a malha a ser estimada
 ```
-
 
 ```{r warning=FALSE}
 k = krige.conv(geo_argila_q1, loc=loci, krige=krige.control(type.krige = "ok", obj.model = eye_argila_q1_1))
